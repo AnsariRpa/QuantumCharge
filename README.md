@@ -1,4 +1,5 @@
 # QuantumCharge
+<<<<<<< HEAD
 
 Journey-aware EV charging optimization using a hybrid classical–quantum workflow.
 
@@ -68,3 +69,6 @@ Penalty terms enforce:
 - Qiskit Aer: shot-based circuit simulation with `AerSimulator`.
 - QAOA: one cost layer and one mixer layer, with parameters optimized by SciPy COBYLA.
 - Backend: local `AerSimulator` (no cloud quantum hardware is used).
+=======
+As electric vehicle adoption increases, charging stations may experience periods of high demand. Poor scheduling can lead to long waiting times, inefficient use of charging infrastructure, and higher energy costs.
+>>>>>>> 6bca7e5a511a8d0b5854c6abe8f697cbdb5825d6
