@@ -1,0 +1,7 @@
+qiskit
+qiskit-aer
+scipy
+numpy
+pandas
+streamlit
+plotly
