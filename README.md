@@ -1,18 +1,34 @@
-# QuantumCharge
-<<<<<<< HEAD
+# ⚡ QuantumCharge
 
-Journey-aware EV charging optimization using a hybrid classical–quantum workflow.
+**Journey-aware EV charging optimization using a hybrid classical–quantum workflow.**
 
-## Current prototype
+QuantumCharge explores how QUBO + QAOA can help allocate EV charging decisions across stations and time slots while considering charging duration, estimated queues, energy cost, detour, amenities and an illustrative battery-care preference.
 
-- Synthetic scenario: 2 EVs, 3 charging stations, 2 time slots.
-- Classical preprocessing estimates charging duration, queue delay, energy cost, detour and amenity penalty.
-- QUBO encodes exactly one charging option per EV and station/time capacity conflicts.
-- A hand-built, one-layer QAOA circuit is optimized using SciPy.
-- Qiskit `Statevector` evaluates the QAOA objective; `Qiskit AerSimulator` samples the optimized circuit.
-- Exact feasible enumeration provides a classical baseline.
+## Features
 
-## Setup (Windows PowerShell)
+- Futuristic dark-blue / cyan Streamlit interface.
+- Synthetic EV and charging-station scenario.
+- Classical preprocessing for charging duration, queue delay, tariff, detour and amenities.
+- QUBO formulation for EV assignment and station/time capacity conflicts.
+- One-layer QAOA circuit implemented with Qiskit.
+- SciPy COBYLA parameter optimization.
+- Qiskit Aer local circuit sampling.
+- Exact feasible enumeration as a classical baseline.
+- Results, schedule, dataset and quantum-model pages.
+
+## Project structure
+
+```text
+QuantumCharge/
+├── app.py
+├── requirements.txt
+├── README.md
+├── .gitignore
+└── assets/
+    └── quantumcharge_hero.png
+```
+
+## Setup — Windows PowerShell
 
 ```powershell
 py -3.12 -m venv .venv
@@ -22,53 +38,60 @@ pip install -r requirements.txt
 streamlit run app.py
 ```
 
-If PowerShell blocks environment activation:
+If PowerShell blocks activation:
 
 ```powershell
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 .\.venv\Scripts\Activate.ps1
 ```
 
-## Model
+If the environment already exists, activate it and run:
 
-Decision variable `x[i]` indicates whether an EV uses a station/time option.
-
-The QUBO objective combines:
-- charging duration (including a simplified charging-efficiency/taper factor),
-- queue delay,
-- detour time,
-- electricity cost,
-- amenity penalty,
-- a configurable-style battery-care penalty based on fast-charge streak.
-
-Penalty terms enforce:
-- exactly one option per EV;
-- no two EVs assigned to the same station in the same time slot.
-
-## Important limitations
-
-- All input data is synthetic.
-- Charging duration is a simplified estimate, not an OEM battery charging curve.
-- Battery-care penalty is illustrative, not a universal fast-charge limit or battery-health prediction.
-- Queue times, tariffs, amenities and travel detours are assumed inputs.
-- This is a small proof-of-concept QUBO, not a production routing or charging platform.
-- QAOA is heuristic. The exact classical solver is used as a baseline. No quantum advantage is claimed.
-- If QAOA sampling yields no feasible bitstring, the app transparently falls back to the exact feasible solution and labels that fallback.
-
-## Suggested next improvements
-
-1. Add route-aware station reachability and battery energy constraints.
-2. Replace synthetic data with a documented public dataset or user-provided station data.
-3. Add a multi-EV scheduling horizon with charger power-sharing constraints.
-4. Add configurable user priorities and richer battery-care constraints.
-5. Compare QAOA against exact enumeration over multiple generated instances.
+```powershell
+python -m pip install -r requirements.txt
+streamlit run app.py
+```
 
 ## Quantum implementation
 
-- Qiskit SDK: circuit construction and statevector simulation.
-- Qiskit Aer: shot-based circuit simulation with `AerSimulator`.
-- QAOA: one cost layer and one mixer layer, with parameters optimized by SciPy COBYLA.
-- Backend: local `AerSimulator` (no cloud quantum hardware is used).
-=======
-As electric vehicle adoption increases, charging stations may experience periods of high demand. Poor scheduling can lead to long waiting times, inefficient use of charging infrastructure, and higher energy costs.
->>>>>>> 6bca7e5a511a8d0b5854c6abe8f697cbdb5825d6
+- **Qiskit:** quantum circuit construction.
+- **Qiskit Statevector:** evaluates the QAOA expected QUBO energy during parameter optimization.
+- **Qiskit Aer:** shot-based sampling with `AerSimulator`.
+- **QAOA:** one cost layer and one X-mixer layer (`p = 1`).
+- **Classical optimizer:** SciPy COBYLA optimizes gamma and beta.
+- **Classical baseline:** exact enumeration finds the best feasible assignment for this small instance.
+
+No IBM Quantum account, API key or cloud quantum hardware is required to run the prototype.
+
+## Model overview
+
+The binary decision variable represents whether an EV uses a particular station at a particular time slot.
+
+The objective combines:
+- estimated charging duration;
+- queue delay;
+- detour time;
+- electricity cost;
+- amenity dissatisfaction penalty;
+- illustrative battery-care penalty.
+
+Penalty terms enforce exactly one charging option per EV and prevent two EVs from occupying the same station/time slot in this capacity-one scenario.
+
+## Important limitations
+
+- All EV, station, queue, tariff, detour and amenity inputs are synthetic.
+- Charging duration uses a simplified effective-power factor and is not an OEM charging curve.
+- Battery-care penalty is illustrative. There is no universal rule that every fifth charge must be AC.
+- This version does not query live charging networks, traffic, maps or station availability.
+- The current QUBO is a small proof-of-concept with 12 binary decision variables.
+- QAOA is heuristic. The exact classical solution is the optimum for this small instance.
+- No quantum advantage is claimed.
+- If QAOA samples contain no feasible bitstring, the app explicitly labels the exact-classical fallback.
+
+## Run
+
+```powershell
+streamlit run app.py
+```
+
+Then choose **Optimize Journey** in the sidebar, run the experiment, and inspect **Results & Comparison** and **Charging Schedule**.
